@@ -14,6 +14,10 @@ public:
     Money(Money&& other) noexcept; // перемещающий
     virtual ~Money() noexcept;
 
+    // Дополнение до правила пяти
+    // Money& operator=(const Money& other);
+    // Money& operator=(Money&& other) noexcept;
+
     // Операции (возвращают новый Money)
     Money add(const Money& other) const;
     Money subtract(const Money& other) const;
@@ -28,7 +32,7 @@ public:
     size_t getSize() const; // размер массива
 
 private:
-    unsigned char* digits;
+    unsigned char* digits{nullptr};
     size_t size;
 
     void normalize();

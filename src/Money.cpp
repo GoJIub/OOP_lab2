@@ -2,21 +2,17 @@
 #include <cstring>
 #include <algorithm>
 
-Money::Money() {
-    size = 2;
+Money::Money() : size(2) {
     digits = new unsigned char[2]{0, 0};
 }
 
-Money::Money(size_t n, unsigned char t) {
-    size = std::max(n, static_cast<size_t>(2));
-
+Money::Money(size_t n, unsigned char t) : size(std::max(n, static_cast<size_t>(2))) {
     if (t > 9) throw std::invalid_argument("Digit must be 0-9");
     digits = new unsigned char[size];
     std::fill_n(digits, size, t);
 }
 
-Money::Money(const std::initializer_list<unsigned char>& t) {
-    size = std::max(t.size(), static_cast<size_t>(2));
+Money::Money(const std::initializer_list<unsigned char>& t) : size(std::max(t.size(), static_cast<size_t>(2))) {
     digits = new unsigned char[size];
 
     size_t i = 0;
@@ -56,18 +52,44 @@ Money::Money(const std::string& str) {
     normalize();
 }
 
-Money::Money(const Money& other) {
-    size = other.size;
+Money::Money(const Money& other) : size(other.size) {
     digits = new unsigned char[size];
     std::copy(other.digits, other.digits + size, digits);
 }
 
-Money::Money(Money&& other) noexcept {
-    digits = other.digits;
-    size = other.size;
+Money::Money(Money&& other) noexcept : digits(other.digits), size(other.size) {
     other.digits = nullptr;
     other.size = 0;
 }
+
+/*
+// Дополнение до правила пяти
+Money& Money::operator=(const Money& other) {
+    if (this == &other) return *this;
+
+    delete[] digits;
+
+    size = other.size;
+    digits = new unsigned char[size];
+    std::copy(other.digits, other.digits + size, digits);
+
+    return *this;
+}
+
+Money& Money::operator=(Money&& other) noexcept {
+    if (this == &other) return *this;
+
+    delete[] digits;
+
+    digits = other.digits;
+    size = other.size;
+
+    other.digits = nullptr;
+    other.size = 0;
+
+    return *this;
+}
+*/
 
 Money::~Money() noexcept {
     delete[] digits;
