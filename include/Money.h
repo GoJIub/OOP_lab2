@@ -14,13 +14,16 @@ public:
     Money(Money&& other) noexcept; // перемещающий
     virtual ~Money() noexcept;
 
-    // Дополнение до правила пяти
-    // Money& operator=(const Money& other);
-    // Money& operator=(Money&& other) noexcept;
+    Money& operator=(const Money& other); // копирующий оператор присваивания
+    Money& operator=(Money&& other) noexcept; // перемещающий опертатор присваивания
 
     // Операции (возвращают новый Money)
     Money add(const Money& other) const;
     Money subtract(const Money& other) const;
+
+    // Операции с присваиванием
+    Money& operator+=(const Money& other);
+    Money& operator-=(const Money& other);
 
     // Сравнения
     bool equals(const Money& other) const;
@@ -37,5 +40,9 @@ private:
 
     void normalize();
 };
+
+// Свободные операторы
+Money operator+(Money left, const Money& right);
+Money operator-(Money left, const Money& right);
 
 #endif

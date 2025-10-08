@@ -62,8 +62,6 @@ Money::Money(Money&& other) noexcept : digits(other.digits), size(other.size) {
     other.size = 0;
 }
 
-/*
-// Дополнение до правила пяти
 Money& Money::operator=(const Money& other) {
     if (this == &other) return *this;
 
@@ -89,7 +87,6 @@ Money& Money::operator=(Money&& other) noexcept {
 
     return *this;
 }
-*/
 
 Money::~Money() noexcept {
     delete[] digits;
@@ -125,7 +122,6 @@ Money Money::add(const Money& other) const {
     return result;
 }
 
-
 Money Money::subtract(const Money& other) const {
     if (lessThan(other)) throw std::domain_error("Result would be negative");
 
@@ -154,30 +150,40 @@ Money Money::subtract(const Money& other) const {
     return result;
 }
 
+Money& Money::operator+=(const Money& other) {
+    *this = this->add(other);
+    return *this;
+}
+
+Money& Money::operator-=(const Money& other) {
+    *this = this->subtract(other);
+    return *this;
+}
+
 bool Money::equals(const Money& other) const {
     if (size != other.size) return false;
     return std::memcmp(digits, other.digits, size) == 0;
 }
 
 bool Money::greaterThan(const Money& other) const {
-    if (size > other.size) return true;
-    if (size < other.size) return false;
-    return std::memcmp(digits, other.digits, size) > 0;
+    if (size != other.size) return size > other.size;
+    for (size_t i = size; i-- > 0;)
+        if (digits[i] != other.digits[i]) return digits[i] > other.digits[i];
+    return false;
 }
 
 bool Money::lessThan(const Money& other) const {
-    if (size > other.size) return false;
-    if (size < other.size) return true;
-    return std::memcmp(digits, other.digits, size) < 0;
+    if (size != other.size) return size < other.size;
+    for (size_t i = size; i-- > 0;)
+        if (digits[i] != other.digits[i]) return digits[i] < other.digits[i];
+    return false;
 }
 
 std::string Money::toString() const {
-    // Дробная часть: десятки (digits[1]) + единицы (digits[0])
     std::string decimal;
     decimal.push_back(char('0' + digits[1]));
     decimal.push_back(char('0' + digits[0]));
 
-    // Целая часть: берем от старших к младшим (индексы size-1 .. 2)
     std::string whole;
     if (size <= 2) {
         whole = "0";
@@ -191,4 +197,14 @@ std::string Money::toString() const {
 
 size_t Money::getSize() const {
     return size;
+}
+
+Money operator+(Money left, const Money& right) {
+    left += right;
+    return left;
+}
+
+Money operator-(Money left, const Money& right) {
+    left -= right;
+    return left;
 }
