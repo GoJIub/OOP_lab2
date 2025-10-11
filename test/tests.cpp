@@ -30,7 +30,8 @@ TEST(MoneyAssignmentTest, CopyAssignment) {
     Money a("123.45");
     Money b("67.00");
 
-    b = a; // копирующее присваивание
+    // b = a; // копирующее присваивание
+    b.copy(a);
     EXPECT_EQ(b.toString(), "123.45");
     EXPECT_EQ(a.toString(), "123.45");
     EXPECT_NE(&a, &b); // разные объекты
@@ -40,71 +41,72 @@ TEST(MoneyAssignmentTest, MoveAssignment) {
     Money a("999.99");
     Money b("0.00");
 
-    b = std::move(a);
+    // b = std::move(a);
+    b.move(std::move(a));
     EXPECT_EQ(b.toString(), "999.99");
     EXPECT_TRUE(a.getSize() == 0 || a.toString() == "0.00");
 }
 
 TEST(MoneyAssignmentTest, SelfAssignment) {
     Money a("321.10");
-    a = a;
+    a.copy(a);
     EXPECT_EQ(a.toString(), "321.10");
 }
 
 // --- Арифметика с присваиванием ---
-TEST(MoneyArithmeticAssignmentTest, PlusEqualsSimple) {
-    Money a("100.50");
-    Money b("0.50");
+// TEST(MoneyArithmeticAssignmentTest, PlusEqualsSimple) {
+//     Money a("100.50");
+//     Money b("0.50");
 
-    a += b;
-    EXPECT_EQ(a.toString(), "101.00");
-}
+//     a += b;
+//     EXPECT_EQ(a.toString(), "101.00");
+// }
 
-TEST(MoneyArithmeticAssignmentTest, MinusEqualsSimple) {
-    Money a("200.00");
-    Money b("50.25");
+// TEST(MoneyArithmeticAssignmentTest, MinusEqualsSimple) {
+//     Money a("200.00");
+//     Money b("50.25");
 
-    a -= b;
-    EXPECT_EQ(a.toString(), "149.75");
-}
+//     a -= b;
+//     EXPECT_EQ(a.toString(), "149.75");
+// }
 
-TEST(MoneyArithmeticAssignmentTest, PlusEqualsWithCarry) {
-    Money a("999.99");
-    Money b("0.01");
+// TEST(MoneyArithmeticAssignmentTest, PlusEqualsWithCarry) {
+//     Money a("999.99");
+//     Money b("0.01");
 
-    a += b;
-    EXPECT_EQ(a.toString(), "1000.00");
-}
+//     a += b;
+//     EXPECT_EQ(a.toString(), "1000.00");
+// }
 
-TEST(MoneyArithmeticAssignmentTest, MinusEqualsWithBorrow) {
-    Money a("1000.00");
-    Money b("999.99");
+// TEST(MoneyArithmeticAssignmentTest, MinusEqualsWithBorrow) {
+//     Money a("1000.00");
+//     Money b("999.99");
 
-    a -= b;
-    EXPECT_EQ(a.toString(), "0.01");
-}
+//     a -= b;
+//     EXPECT_EQ(a.toString(), "0.01");
+// }
 
-TEST(MoneyArithmeticAssignmentTest, MinusEqualsThrowsWhenNegative) {
-    Money a("5.00");
-    Money b("10.00");
+// TEST(MoneyArithmeticAssignmentTest, MinusEqualsThrowsWhenNegative) {
+//     Money a("5.00");
+//     Money b("10.00");
 
-    EXPECT_THROW(a -= b, std::domain_error);
-}
+//     EXPECT_THROW(a -= b, std::domain_error);
+// }
 
-// --- Свободные операторы + и - ---
-TEST(MoneyTest, AdditionOperator) {
-    Money a("123.45");
-    Money b("67.00");
-    Money c = a + b;
-    EXPECT_EQ(c.toString(), "190.45");
-}
+// // --- Свободные операторы + и - ---
+// TEST(MoneyTest, AdditionOperator) {
+//     Money a("123.45");
+//     Money b("67.00");
+//     Money c = a + b;
+//     EXPECT_EQ(c.toString(), "190.45");
+// }
 
-TEST(MoneyTest, SubtractionOperator) {
-    Money a("123.45");
-    Money b("67.00");
-    Money c = a - b;
-    EXPECT_EQ(c.toString(), "56.45");
-}
+// TEST(MoneyTest, SubtractionOperator) {
+//     Money a("123.45");
+//     Money b("67.00");
+//     Money c = a - b;
+//     EXPECT_EQ(c.toString(), "56.45");
+// }
 
 // --- Сравнения ---
 TEST(MoneyTest, ComparisonEquals) {
@@ -140,19 +142,19 @@ TEST(MoneyTest, SubtractionNegativeResultThrows) {
 }
 
 // --- Пограничные случаи ---
-TEST(MoneyTest, ZeroPlusZero) {
-    Money a("0.00");
-    Money b("0.00");
-    Money c = a + b;
-    EXPECT_EQ(c.toString(), "0.00");
-}
+// TEST(MoneyTest, ZeroPlusZero) {
+//     Money a("0.00");
+//     Money b("0.00");
+//     Money c = a + b;
+//     EXPECT_EQ(c.toString(), "0.00");
+// }
 
-TEST(MoneyTest, LargeAddition) {
-    Money a("123456789.99");
-    Money b("0.01");
-    Money c = a + b;
-    EXPECT_EQ(c.toString(), "123456790.00");
-}
+// TEST(MoneyTest, LargeAddition) {
+//     Money a("123456789.99");
+//     Money b("0.01");
+//     Money c = a + b;
+//     EXPECT_EQ(c.toString(), "123456790.00");
+// }
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

@@ -62,7 +62,33 @@ Money::Money(Money&& other) noexcept : digits(other.digits), size(other.size) {
     other.size = 0;
 }
 
-Money& Money::operator=(const Money& other) {
+// Money& Money::operator=(const Money& other) {
+//     if (this == &other) return *this;
+
+//     delete[] digits;
+
+//     size = other.size;
+//     digits = new unsigned char[size];
+//     std::copy(other.digits, other.digits + size, digits);
+
+//     return *this;
+// }
+
+// Money& Money::operator=(Money&& other) noexcept {
+//     if (this == &other) return *this;
+
+//     delete[] digits;
+
+//     digits = other.digits;
+//     size = other.size;
+
+//     other.digits = nullptr;
+//     other.size = 0;
+
+//     return *this;
+// }
+
+Money& Money::copy(const Money& other) {
     if (this == &other) return *this;
 
     delete[] digits;
@@ -74,7 +100,7 @@ Money& Money::operator=(const Money& other) {
     return *this;
 }
 
-Money& Money::operator=(Money&& other) noexcept {
+Money& Money::move(Money&& other) noexcept {
     if (this == &other) return *this;
 
     delete[] digits;
@@ -150,15 +176,15 @@ Money Money::subtract(const Money& other) const {
     return result;
 }
 
-Money& Money::operator+=(const Money& other) {
-    *this = this->add(other);
-    return *this;
-}
+// Money& Money::operator+=(const Money& other) {
+//     *this = this->add(other);
+//     return *this;
+// }
 
-Money& Money::operator-=(const Money& other) {
-    *this = this->subtract(other);
-    return *this;
-}
+// Money& Money::operator-=(const Money& other) {
+//     *this = this->subtract(other);
+//     return *this;
+// }
 
 bool Money::equals(const Money& other) const {
     if (size != other.size) return false;
@@ -199,12 +225,12 @@ size_t Money::getSize() const {
     return size;
 }
 
-Money operator+(Money left, const Money& right) {
-    left += right;
-    return left;
-}
+// Money operator+(Money left, const Money& right) {
+//     left += right;
+//     return left;
+// }
 
-Money operator-(Money left, const Money& right) {
-    left -= right;
-    return left;
-}
+// Money operator-(Money left, const Money& right) {
+//     left -= right;
+//     return left;
+// }
